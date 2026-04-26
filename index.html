@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting Started with Claude Code</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --accent: #7c3aed;
+      --accent-light: #ede9fe;
+      --accent-hover: #6d28d9;
+      --radius: 12px;
+      --max-w: 780px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 999px;
+      margin-bottom: 16px;
+    }
+
+    header h1 {
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 56px;
+    }
+
+    section h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      letter-spacing: -0.01em;
+    }
+
+    /* ── Resource Cards ── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 4px 16px rgba(124, 58, 237, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .card-icon {
+      font-size: 1.4rem;
+      line-height: 1;
+    }
+
+    .card-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Steps ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 16px;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .step:last-child { border-bottom: none; }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .step p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .step a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .step a:hover { text-decoration: underline; }
+
+    code {
+      font-family: "SF Mono", "Fira Code", Consolas, monospace;
+      background: #f3f4f6;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 0.82rem;
+      color: #374151;
+    }
+
+    /* ── FAQ ── */
+    .faq {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    details {
+      background: var(--surface);
+    }
+
+    details + details { margin-top: 1px; }
+
+    summary {
+      padding: 18px 20px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary::after {
+      content: "+";
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--muted);
+      flex-shrink: 0;
+      margin-left: 12px;
+      transition: transform 0.2s;
+    }
+
+    details[open] summary::after {
+      content: "−";
+    }
+
+    .faq-body {
+      padding: 0 20px 18px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .faq-body a { color: var(--accent); text-decoration: none; }
+    .faq-body a:hover { text-decoration: underline; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 24px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Webinar — April 26, 2026</div>
+  <h1>Getting Started with Claude Code</h1>
+  <p>Everything you need to follow along today and keep exploring after the session.</p>
+</header>
+
+<main>
+
+  <!-- Resources -->
+  <section>
+    <h2>Resources &amp; Links</h2>
+    <div class="cards">
+
+      <a class="card" href="https://claude.ai/code" target="_blank" rel="noopener">
+        <div class="card-icon">🤖</div>
+        <div class="card-title">Claude Code</div>
+        <div class="card-desc">The official Claude Code web app and download page.</div>
+      </a>
+
+      <a class="card" href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">
+        <div class="card-icon">📖</div>
+        <div class="card-title">Documentation</div>
+        <div class="card-desc">Official guides, commands, and tips from Anthropic.</div>
+      </a>
+
+      <a class="card" href="https://console.anthropic.com" target="_blank" rel="noopener">
+        <div class="card-icon">🔑</div>
+        <div class="card-title">Anthropic Console</div>
+        <div class="card-desc">Create your account and get your API key here.</div>
+      </a>
+
+      <a class="card" href="https://github.com/anthropics/claude-code" target="_blank" rel="noopener">
+        <div class="card-icon">🐙</div>
+        <div class="card-title">GitHub</div>
+        <div class="card-desc">Claude Code's open-source repository. Star it!</div>
+      </a>
+
+      <a class="card" href="https://neon.tech" target="_blank" rel="noopener">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Neon</div>
+        <div class="card-desc">Serverless Postgres database — great for projects built with Claude Code.</div>
+      </a>
+
+      <a class="card" href="https://nodejs.org" target="_blank" rel="noopener">
+        <div class="card-icon">🟩</div>
+        <div class="card-title">Node.js</div>
+        <div class="card-desc">Required to install and run Claude Code on your machine.</div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- WSL Setup -->
+  <section>
+    <h2>Setting Up Claude Code on Windows (WSL)</h2>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h3>Install WSL (Windows Subsystem for Linux)</h3>
+          <p>Open <strong>PowerShell as Administrator</strong> and run: <code>wsl --install</code>. Restart your computer when prompted. This gives you a Linux environment inside Windows.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h3>Open your Linux terminal</h3>
+          <p>Search for <strong>Ubuntu</strong> in the Start menu and open it. The first time, you'll be asked to create a username and password — just pick something simple.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h3>Install Node.js</h3>
+          <p>In the Ubuntu terminal, run these two commands one at a time:</p>
+          <p style="margin-top:8px"><code>curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -</code></p>
+          <p style="margin-top:6px"><code>sudo apt-get install -y nodejs</code></p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <h3>Install Claude Code</h3>
+          <p>Run: <code>npm install -g @anthropic-ai/claude-code</code></p>
+          <p style="margin-top:6px">This installs Claude Code globally so you can use it anywhere.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div>
+          <h3>Get your API key</h3>
+          <p>Go to <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>, sign in, and create an API key. Copy it — you'll only see it once.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div>
+          <h3>Start Claude Code</h3>
+          <p>Navigate to your project folder and run: <code>claude</code></p>
+          <p style="margin-top:6px">You'll be prompted to paste your API key on the first run. After that, you're ready to go!</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq">
+
+      <details>
+        <summary>Do I need to know how to code to use Claude Code?</summary>
+        <div class="faq-body">
+          Not at all! Claude Code is designed to let you describe what you want in plain English. You tell it what to build or fix, and it handles the code. That said, having a basic understanding of what you're trying to build will help you give better instructions.
+        </div>
+      </details>
+
+      <details>
+        <summary>Is Claude Code free?</summary>
+        <div class="faq-body">
+          Claude Code itself is free to install, but it uses the Anthropic API, which is a paid service billed by usage. You get a small amount of free credits when you create a new account. For most light use, the cost is very affordable — think of it like a pay-as-you-go service.
+        </div>
+      </details>
+
+      <details>
+        <summary>What is WSL and why do I need it?</summary>
+        <div class="faq-body">
+          WSL (Windows Subsystem for Linux) is a feature built into Windows that lets you run a Linux-style terminal. Claude Code works best in a Linux or Mac terminal environment, so on Windows, WSL is the recommended way to run it. Think of it as a small "Linux mode" living inside your Windows PC.
+        </div>
+      </details>
+
+      <details>
+        <summary>What is Neon and how does it fit in?</summary>
+        <div class="faq-body">
+          <a href="https://neon.tech" target="_blank" rel="noopener">Neon</a> is a cloud-hosted Postgres database. When you build projects with Claude Code that need to store data (like a list of users, form responses, etc.), Neon is a great place to put that data. It has a free tier and works seamlessly with the kinds of projects Claude Code helps you build.
+        </div>
+      </details>
+
+      <details>
+        <summary>What can I actually build with Claude Code?</summary>
+        <div class="faq-body">
+          All kinds of things — websites, internal tools, scripts that automate repetitive tasks, simple apps with databases, API integrations, and more. If you can describe it clearly, Claude Code can usually help you build it.
+        </div>
+      </details>
+
+      <details>
+        <summary>Is my code and data private?</summary>
+        <div class="faq-body">
+          Your code runs entirely on your own machine. When you send a message to Claude Code, that message (including any code you share) is sent to Anthropic's API. Anthropic's <a href="https://www.anthropic.com/privacy" target="_blank" rel="noopener">privacy policy</a> applies. Avoid pasting sensitive credentials or personal data directly into the chat.
+        </div>
+      </details>
+
+      <details>
+        <summary>Where can I get help if I'm stuck?</summary>
+        <div class="faq-body">
+          The best places to start are the official <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code docs</a> and the <a href="https://github.com/anthropics/claude-code" target="_blank" rel="noopener">GitHub repository</a>, where you can open issues or browse what others have asked. You can also just ask Claude Code itself — type <code>/help</code> at any time.
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Made for the Claude Code Webinar &mdash; April 26, 2026
+</footer>
+
+</body>
+</html>
